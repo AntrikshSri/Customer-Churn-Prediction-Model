@@ -1,7 +1,55 @@
+import os
 from flask import Flask, request, jsonify, render_template
+from flask_sqlalchemy import SQLAlchemy
 import joblib
+from datetime import datetime
+
 application = Flask(__name__)
-model=joblib.load("churn_model.pkl")
+
+# ✅ Configure Database (Railway provides DATABASE_URL, local uses SQLite)
+database_url = os.environ.get('DATABASE_URL', 'sqlite:///predictions.db')
+if database_url.startswith("postgres://"):
+    database_url = database_url.replace("postgres://", "postgresql://", 1)
+
+application.config['SQLALCHEMY_DATABASE_URI'] = database_url
+application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(application)
+
+model = joblib.load("churn_model.pkl")
+
+# ✅ Define Database Model for storing predictions
+class PredictionRecord(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    # Input Features
+    gender = db.Column(db.String(50))
+    seniorcitizen = db.Column(db.Integer)
+    partner = db.Column(db.String(50))
+    dependents = db.Column(db.String(50))
+    tenure = db.Column(db.Integer)
+    phoneservice = db.Column(db.String(50))
+    multiplelines = db.Column(db.String(50))
+    internetservice = db.Column(db.String(50))
+    onlinesecurity = db.Column(db.String(50))
+    onlinebackup = db.Column(db.String(50))
+    deviceprotection = db.Column(db.String(50))
+    techsupport = db.Column(db.String(50))
+    streamingtv = db.Column(db.String(50))
+    streamingmovies = db.Column(db.String(50))
+    contract = db.Column(db.String(50))
+    paperlessbilling = db.Column(db.String(50))
+    paymentmethod = db.Column(db.String(50))
+    monthlycharges = db.Column(db.Float)
+    totalcharges = db.Column(db.Float)
+    
+    # Output
+    prediction_result = db.Column(db.Integer)
+
+# Create tables if they don't exist
+with application.app_context():
+    db.create_all()
 @application.route('/')
 def home():
     return render_template('index.html')
@@ -74,8 +122,39 @@ def predict():
         df = df.fillna(0)
 
         prediction = model.predict(df)
+        pred_value = int(prediction[0])
 
-        return jsonify({'prediction': int(prediction[0])})
+        # ✅ Save input and output to Database
+        try:
+            record = PredictionRecord(
+                gender=value.get('gender'),
+                seniorcitizen=value.get('seniorcitizen'),
+                partner=value.get('partner'),
+                dependents=value.get('dependents'),
+                tenure=value.get('tenure'),
+                phoneservice=value.get('phoneservice'),
+                multiplelines=value.get('multiplelines'),
+                internetservice=value.get('internetservice'),
+                onlinesecurity=value.get('onlinesecurity'),
+                onlinebackup=value.get('onlinebackup'),
+                deviceprotection=value.get('deviceprotection'),
+                techsupport=value.get('techsupport'),
+                streamingtv=value.get('streamingtv'),
+                streamingmovies=value.get('streamingmovies'),
+                contract=value.get('contract'),
+                paperlessbilling=value.get('paperlessbilling'),
+                paymentmethod=value.get('paymentmethod'),
+                monthlycharges=value.get('monthlycharges'),
+                totalcharges=value.get('totalcharges'),
+                prediction_result=pred_value
+            )
+            db.session.add(record)
+            db.session.commit()
+        except Exception as db_err:
+            print(f"Database Error: {db_err}")
+            db.session.rollback()
+
+        return jsonify({'prediction': pred_value})
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
