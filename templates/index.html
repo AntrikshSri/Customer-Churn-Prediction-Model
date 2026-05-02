@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Churn Predictor | Enterprise Intelligence</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="background-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <main class="container">
+        <header>
+            <div class="logo">
+                <i class="fa-solid fa-chart-pie"></i>
+                <h1>Churn<span>AI</span></h1>
+            </div>
+            <p>Advanced predictive analytics for customer retention</p>
+        </header>
+
+        <form id="prediction-form" class="glass-panel">
+            <div class="form-sections">
+                <!-- Customer Profile -->
+                <section class="form-group">
+                    <h2><i class="fa-solid fa-user"></i> Customer Profile</h2>
+                    <div class="input-grid">
+                        <div class="input-item">
+                            <label for="gender">Gender</label>
+                            <select id="gender" name="gender" required>
+                                <option value="Female">Female</option>
+                                <option value="Male">Male</option>
+                            </select>
+                        </div>
+                        <div class="input-item">
+                            <label for="seniorcitizen">Senior Citizen</label>
+                            <select id="seniorcitizen" name="seniorcitizen" required>
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+                        <div class="input-item">
+                            <label for="partner">Partner</label>
+                            <select id="partner" name="partner" required>
+                                <option value="No">No</option>
+                                <option value="Yes">Yes</option>
+                            </select>
+                        </div>
+                        <div class="input-item">
+                            <label for="dependents">Dependents</label>
+                            <select id="dependents" name="dependents" required>
+                                <option value="No">No</option>
+                                <option value="Yes">Yes</option>
+                            </select>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Account & Billing -->
+                <section class="form-group">
+                    <h2><i class="fa-solid fa-wallet"></i> Account & Billing</h2>
+                    <div class="input-grid">
+                        <div class="input-item">
+                            <label for="tenure">Tenure (Months)</label>
+                            <input type="number" id="tenure" name="tenure" value="12" min="0" required>
+                        </div>
+                        <div class="input-item">
+                            <label for="contract">Contract</label>
+                            <select id="contract" name="contract" required>
+                                <option value="Month-to-month">Month-to-month</option>
+                                <option value="One year">One year</option>
+                                <option value="Two year">Two year</option>
+                            </select>
+                        </div>
+                        <div class="input-item">
+                            <label for="paperlessbilling">Paperless Billing</label>
+                            <select id="paperlessbilling" name="paperlessbilling" required>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+                        <div class="input-item">
+                            <label for="paymentmethod">Payment Method</label>
+                            <select id="paymentmethod" name="paymentmethod" required>
+                                <option value="Electronic check">Electronic check</option>
+                                <option value="Mailed check">Mailed check</option>
+                                <option value="Bank transfer (automatic)">Bank transfer (auto)</option>
+                                <option value="Credit card (automatic)">Credit card (auto)</option>
+                            </select>
+                        </div>
+                        <div class="input-item">
+                            <label for="monthlycharges">Monthly Charges ($)</label>
+                            <input type="number" step="0.01" id="monthlycharges" name="monthlycharges" value="75.00" required>
+                        </div>
+                        <div class="input-item">
+                            <label for="totalcharges">Total Charges ($)</label>
+                            <input type="number" step="0.01" id="totalcharges" name="totalcharges" value="900.00" required>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Services -->
+                <section class="form-group services-group">
+                    <h2><i class="fa-solid fa-server"></i> Services Subscribed</h2>
+                    <div class="input-grid three-col">
+                        <div class="input-item">
+                            <label for="phoneservice">Phone Service</label>
+                            <select id="phoneservice" name="phoneservice">
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+                        <div class="input-item">
+                            <label for="multiplelines">Multiple Lines</label>
+                            <select id="multiplelines" name="multiplelines">
+                                <option value="No">No</option>
+                                <option value="Yes">Yes</option>
+                                <option value="No phone service">No phone service</option>
+                            </select>
+                        </div>
+                        <div class="input-item">
+                            <label for="internetservice">Internet Service</label>
+                            <select id="internetservice" name="internetservice">
+                                <option value="Fiber optic">Fiber optic</option>
+                                <option value="DSL">DSL</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+                        <div class="input-item">
+                            <label for="onlinesecurity">Online Security</label>
+                            <select id="onlinesecurity" name="onlinesecurity">
+                                <option value="No">No</option>
+                                <option value="Yes">Yes</option>
+                                <option value="No internet service">No internet service</option>
+                            </select>
+                        </div>
+                        <div class="input-item">
+                            <label for="onlinebackup">Online Backup</label>
+                            <select id="onlinebackup" name="onlinebackup">
+                                <option value="No">No</option>
+                                <option value="Yes">Yes</option>
+                                <option value="No internet service">No internet service</option>
+                            </select>
+                        </div>
+                        <div class="input-item">
+                            <label for="deviceprotection">Device Protection</label>
+                            <select id="deviceprotection" name="deviceprotection">
+                                <option value="No">No</option>
+                                <option value="Yes">Yes</option>
+                                <option value="No internet service">No internet service</option>
+                            </select>
+                        </div>
+                        <div class="input-item">
+                            <label for="techsupport">Tech Support</label>
+                            <select id="techsupport" name="techsupport">
+                                <option value="No">No</option>
+                                <option value="Yes">Yes</option>
+                                <option value="No internet service">No internet service</option>
+                            </select>
+                        </div>
+                        <div class="input-item">
+                            <label for="streamingtv">Streaming TV</label>
+                            <select id="streamingtv" name="streamingtv">
+                                <option value="No">No</option>
+                                <option value="Yes">Yes</option>
+                                <option value="No internet service">No internet service</option>
+                            </select>
+                        </div>
+                        <div class="input-item">
+                            <label for="streamingmovies">Streaming Movies</label>
+                            <select id="streamingmovies" name="streamingmovies">
+                                <option value="No">No</option>
+                                <option value="Yes">Yes</option>
+                                <option value="No internet service">No internet service</option>
+                            </select>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <div class="actions">
+                <button type="submit" class="btn-primary" id="predict-btn">
+                    <span>Analyze Customer Risk</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </form>
+    </main>
+
+    <!-- Results Modal -->
+    <div class="modal-overlay" id="result-modal">
+        <div class="modal-content glass-panel">
+            <button class="close-btn" id="close-modal"><i class="fa-solid fa-times"></i></button>
+            <div id="loading-state" class="state-container">
+                <div class="spinner"></div>
+                <h3>Analyzing neural pathways...</h3>
+            </div>
+            
+            <div id="result-state" class="state-container hidden">
+                <div class="result-icon" id="result-icon">
+                    <i class="fa-solid fa-check"></i>
+                </div>
+                <h2 id="result-title">Customer is Safe</h2>
+                <p id="result-message">This customer has a low probability of churning.</p>
+                <div class="confidence-bar">
+                    <div class="confidence-fill" id="confidence-fill"></div>
+                </div>
+                <button class="btn-secondary" id="reset-btn">Analyze Another</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
